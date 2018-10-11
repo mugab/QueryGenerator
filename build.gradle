@@ -1,0 +1,36 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+version = '1.0'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+//Get dependencies from Maven central repository
+repositories {
+	jcenter()
+	mavenCentral()	
+}
+
+//Project dependencies
+dependencies {
+	compile 'com.metaparadigm:json-rpc:1.0'
+	testImplementation 'junit:junit:4.12'				
+}
+
+sourceSets {
+	main.java.srcDir "src/main/java"
+	//main.resources.srcDir "src/main/resources"
+	test.java.srcDir "src/test/java"
+}
+
+//create a single Jar with all dependencies
+jar {
+    from {
+        (configurations.runtime).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes("Main-Class": "mugab.example.QueryGeneratorMain" )
+    }
+}
